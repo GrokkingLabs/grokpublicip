@@ -22,3 +22,9 @@
 [submodule "src/third_party/lz4"]
 	path = src/third_party/lz4
 	url = https://github.com/lz4/lz4.git
+[submodule "src/third_party/libuv"]
+	path = src/third_party/libuv
+	url = https://github.com/libuv/libuv.git
+[submodule "src/third_party/argh"]
+	path = src/third_party/argh
+	url = https://github.com/adishavit/argh.git

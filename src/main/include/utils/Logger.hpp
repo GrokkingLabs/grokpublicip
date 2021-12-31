@@ -4,14 +4,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// @file Logger.hpp
 /// @author GrokkingLabs
-/// @version 0.1
 /// @brief Helper class for creating a logger.
 ///////////////////////////////////////////////////////////////////////////////
-#include <spdlog/spdlog.h>
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <spdlog/async.h>
 #include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/async.h>
-#include <boost/preprocessor/control/expr_iif.hpp>
+#include <spdlog/spdlog.h>
 namespace grok {
 /////////////////////////////////////////////////
 /// @fn l
@@ -20,9 +19,8 @@ namespace grok {
 /// @return Returns the log.
 /////////////////////////////////////////////////
 inline spdlog::logger &l() {
-  static const std::size_t q_size = 1048576; //queue size must be power of 2
-  static auto ret = spdlog::daily_logger_mt("url_shortner",
-                                            "query_log.log");
+  static const std::size_t q_size = 1048576; // queue size must be power of 2
+  static auto ret = spdlog::daily_logger_mt("url_shortner", "query_log.log");
   static bool initialized = false;
   if (!initialized) {
     spdlog::set_pattern("***[%l] [%H:%M:%S %z] [thread %t] %v ***");
@@ -34,14 +32,16 @@ inline spdlog::logger &l() {
 
 inline spdlog::logger &cl() {
   // create color multi threaded log
-  static auto console = spdlog::stdout_color_mt<spdlog::async_factory>("console");
-  static auto err_logger = spdlog::stderr_color_mt<spdlog::async_factory>("stderr");
+  static auto console =
+      spdlog::stdout_color_mt<spdlog::async_factory>("console");
+  static auto err_logger =
+      spdlog::stderr_color_mt<spdlog::async_factory>("stderr");
   return *spdlog::get("console");
 }
-#define gklog grok::cl()
+#define log grok::cl()
 #define GROK_DBG 1
 #define DEBUG_LOG(...) BOOST_PP_EXPR_IIF(GROK_DBG, grok::cl().info(__VA_ARGS__))
 #define INFO_LOG(...) BOOST_PP_EXPR_IIF(GROK_DBG, grok::cl().info(__VA_ARGS__))
-}
+} // namespace grok
 
 #endif // LOGGER_HPP
