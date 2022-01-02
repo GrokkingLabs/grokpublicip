@@ -8,8 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <fmt/format.h>
 #include <string>
-#include <thread>
-#include <sstream>
+#include <string_view>
+#include <vector>
 
 namespace grok {
 using namespace std;
@@ -34,13 +34,29 @@ public:
 
   /////////////////////////////////////////////////
   /// @fn toString
-  /// @brief Converts the thread ID to a string and returns it
-  /// @return Returns the thread id as a string.
+  /// @brief Converts any value to string
+  /// @return Returns the string representation of the value
+  /// @details This code is borrowed from the following
+  /// @link https://www.cppstories.com/2018/07/string-view-perf-followup/
   /////////////////////////////////////////////////
-  template <> inline static string toString(thread::id const&id) {
-    stringstream ss;
-    ss << id;
-    return ss.str();
+  inline static vector<std::string_view>
+  splitStringView(std::string_view strv, char delims = ' ') {
+    vector<std::string_view> output;
+    size_t first = 0;
+
+    while (first < strv.size()) {
+      const auto second = strv.find_first_of(delims, first);
+
+      if (first != second)
+        output.emplace_back(strv.substr(first, second - first));
+
+      if (second == std::string_view::npos)
+        break;
+
+      first = second + 1;
+    }
+
+    return output;
   }
 };
 } // namespace grok

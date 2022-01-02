@@ -18,18 +18,14 @@ include_directories(/usr/local/include)
 include_directories(src/main/)
 include_directories(src/main/include)
 include_directories(src/third_party/)
-#include_directories(src/third_party/boost)
 include_directories(src/third_party/uWebSockets/src/)
 include_directories(src/third_party/uWebSockets/uSockets/src)
-include_directories(src/third_party/json/single_include/nlohmann)
+#include_directories(src/third_party/json/single_include/nlohmann)
 #include_directories(src/third_party/spdlog/include/)
 #include_directories(src/third_party/fmt/include/)
 include_directories(src/third_party/lz4/lib/)
 include_directories(src/third_party/argh)
 
-
-#find_path(UWEBSOCKETS_INCLUDE_DIRS "uwebsockets/App.h")
-#target_include_directories(boardserver PRIVATE ${UWEBSOCKETS_INCLUDE_DIRS})
 
 add_compile_definitions(LIBUS_NO_SSL)
 add_compile_definitions(UWS_NO_ZLIB)
@@ -66,10 +62,15 @@ file(GLOB
   "src/third_party/argh/argh.h"
   )
 
-file(GLOB
-  JSON_FOR_CPP
-  "src/third_party/json/single_include/nlohmann/json.hpp"
-  )
+# Typically you don't care so much for a third party library's tests to be
+# run from your own project's code.
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(JSON_Install OFF CACHE INTERNAL "")
+add_subdirectory(src/third_party/json/)
+#file(GLOB
+#  JSON_FOR_CPP
+#  "src/third_party/json/single_include/nlohmann/json.hpp"
+#  )
 
 file(GLOB
   SPDLOG
@@ -107,12 +108,14 @@ file(
   "src/main/src/main/*.hpp"
   "src/main/src/main/*.cpp"
   "src/main/include/utils/*.hpp"
+  "src/main/include/models/*.hpp"
   "src/main/cpp/*.cpp"
   "src/main/cpp/*.c"
   )
 
 add_subdirectory(src/third_party/fmt)
 add_subdirectory(src/third_party/spdlog)
+#add_subdirectory(src/third_party/abseil-cpp)
 #add_subdirectory(src/third_party/libuv)
 find_package(Threads REQUIRED)
 #find_package(libuv REQUIRED)
@@ -143,6 +146,7 @@ link_directories(/usr/local/lib/)
 #target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 #target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 find_library(USOCKET_LIB uSockets.a /usr/local/lib/)
+
 message("USOCKET_LIB=${USOCKET_LIB}")
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
@@ -154,6 +158,20 @@ target_link_libraries(${PROJECT_NAME}
         Boost::disable_autolinking
         spdlog::spdlog
         fmt::fmt
+        nlohmann_json::nlohmann_json
+#        absl::algorithm
+#        absl::base
+#        absl::debugging
+#        absl::flat_hash_map
+#        absl::flags
+#        absl::memory
+#        absl::meta
+#        absl::numeric
+#        absl::random_random
+#        absl::strings
+#        absl::synchronization
+#        absl::time
+#        absl::utility
         pthread
         ${USOCKET_LIB}
 #        NuDB::beast_extras

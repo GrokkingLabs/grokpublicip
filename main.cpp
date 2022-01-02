@@ -1,47 +1,74 @@
+#include <iostream>
+#include <thread>
+#include <vector>
 #include "main.hpp"
 #include "utils/Constants.hpp"
 #include "utils/Logger.hpp"
 #include "utils/StringUtils.hpp"
+#include "models/UpStatus.hpp"
+#include <nlohmann/json.hpp>
 #include <App.h>
-//#include <json.hpp>
-#include <iostream>
-#include <thread>
-#include <vector>
+#include <argh.h>
+#include <fmt/core.h>
 
-#define GROK_SERVER_MULTIPLE_THREAD 0
-
-int main() {
+int main(int argc, char **argv) {
   using namespace std;
   using namespace grok;
   using namespace uWS;
-  INFO_LOG("{}", "Hello World!!!");
+  using namespace argh;
+  using namespace nlohmann;
+  using json = nlohmann::json;
+  parser cmdl(argv);
+  glog.info("{}", "Hello World - 1 !!!");
   //  using json = nlohmann::json;
+  u_int64_t port = 8080;
+  cmdl("port", 8080) >> port;
+  bool useMultiplethreads = false;
+  cmdl("threaded", false) >> useMultiplethreads;
   const auto concurrency =
-      GROK_SERVER_MULTIPLE_THREAD ? thread::hardware_concurrency() : 1;
+      useMultiplethreads ? thread::hardware_concurrency() : 1;
   vector<thread *> threads(concurrency);
-  log.info("webApp hardware_concurrency: {}", concurrency);
+  glog.info("webApp hardware_concurrency: {}", concurrency);
   mutex stdoutMutex;
-  const u_int64_t port = 8080;
   transform(
       threads.begin(), threads.end(), threads.begin(), [&](thread * /*t*/) {
         return new thread([&]() {
           auto app = App();
           // Health endpoint
+          /// @fn health
+          /// @brief Get the health status of the application
           app.get("/health", [&](HttpResponse<false> *res, HttpRequest *req) {
+            json j;
+            UpStatus status;
+            nlohmann::to_json(j, status);
             res->writeStatus(Constants::HTTP_OK);
-            res->end(R"({"status": "UP"})");
+            res->end(j.dump());
           });
-          // Get the public IP of the calling service
+
+          /// @fn /
+          /// @brief Get the public IP of the calling service
+          /// @details Returns the IP of the caller. This is done by
+          /// X-Forwarded-For For more details see below links
+          /// @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
+          /// @link https://en.wikipedia.org/wiki/X-Forwarded-For
           app.get("/", [&](HttpResponse<false> *res, HttpRequest *req) {
-            const auto url = req->getUrl();
+            const auto xForwardFor = req->getHeader(Constants::X_FORWARDED_FOR);
+            string forwardedIp = Constants::NA;
+            if (!xForwardFor.empty()) {
+              const auto split_ips = StringUtils::splitStringView(xForwardFor, Constants::X_FORWARDED_FOR_IP_SEPARATOR);
+              if(!split_ips.empty()) {
+                forwardedIp = split_ips.at(0);
+              }
+            }
+
             res->writeStatus(Constants::HTTP_OK);
-            res->end(R"({"status": "ServerUp"})");
+            res->end(forwardedIp);
           });
           // Add listen port
           app.listen(port, [&](auto *listenSocket) {
             stdoutMutex.lock();
             if (listenSocket) {
-              cout << "Thread: " << this_thread::get_id()
+              cout << "Thread Id: " << this_thread::get_id()
                    << " listening on port: " << port << endl;
             }
             stdoutMutex.unlock();
@@ -54,8 +81,7 @@ int main() {
   for_each(threads.begin(), threads.end(), [](thread *t) {
     if (t->joinable()) {
       t->join();
-      //      const auto id = StringUtils::toString(t->get_id());
-      cout << "Joining thread with id: " << t->get_id() << endl;
+      cout << "Joining Thread Id: " << t->get_id() << endl;
     }
   });
   return 0;
