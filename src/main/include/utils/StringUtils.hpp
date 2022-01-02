@@ -6,6 +6,7 @@
 /// @author GrokkingLabs
 /// @brief Various string utilities.
 ///////////////////////////////////////////////////////////////////////////////
+#include <nlohmann/json.hpp>
 #include <fmt/format.h>
 #include <string>
 #include <string_view>
@@ -14,6 +15,8 @@
 namespace grok {
 using namespace std;
 using namespace fmt;
+using namespace nlohmann;
+using json = nlohmann::json;
 /////////////////////////////////////////////////
 /// @class StringUtils
 /// @brief Class to contain all the string utility functions. Functions will be
@@ -57,6 +60,20 @@ public:
     }
 
     return output;
+  }
+
+  /////////////////////////////////////////////////
+  /// @fn objToJsonString
+  /// @brief Converts the object to json string
+  /// @return Returns the json string representation of the object
+  /// @details For this to work the NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE or
+  /// its variants should be defined
+  /////////////////////////////////////////////////
+  template<typename T>
+  inline static string objToJsonString(T const& obj) {
+    json j;
+    nlohmann::to_json(j, obj);
+    return j.dump();
   }
 };
 } // namespace grok

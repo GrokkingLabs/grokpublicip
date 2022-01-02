@@ -23,9 +23,16 @@ struct Constants {
   static const string HTTP_BAD_REQUEST;
   static const string HTTP_INTERNAL_SERVER_ERROR;
   static const string HTTP_NOT_IMPLEMENTED;
+  // HTTP Content Types
+  static inline const string CONTENT_TYPE = "Content-Type";
+  static inline const string CONTENT_TYPE_JSON = "application/json";
+  static inline const string CONTENT_TYPE_TEXT = "text/plain";
   // HTTP Header Values
   static inline const string X_FORWARDED_FOR = "x-forwarded-for";
   static inline const char X_FORWARDED_FOR_IP_SEPARATOR = ',';
+  // Query Parameters
+  static inline const string FORMAT = "format";
+  static inline const string JSON_FORMAT = "json";
   // Configurations
   static const string TRUE;
   static const string FALSE;

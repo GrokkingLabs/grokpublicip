@@ -6,7 +6,7 @@
 #include "utils/Logger.hpp"
 #include "utils/StringUtils.hpp"
 #include "models/UpStatus.hpp"
-#include <nlohmann/json.hpp>
+#include "models/IPFormat.hpp"
 #include <App.h>
 #include <argh.h>
 #include <fmt/core.h>
@@ -16,8 +16,6 @@ int main(int argc, char **argv) {
   using namespace grok;
   using namespace uWS;
   using namespace argh;
-  using namespace nlohmann;
-  using json = nlohmann::json;
   parser cmdl(argv);
   glog.info("{}", "Hello World - 1 !!!");
   //  using json = nlohmann::json;
@@ -38,11 +36,9 @@ int main(int argc, char **argv) {
           /// @fn health
           /// @brief Get the health status of the application
           app.get("/health", [&](HttpResponse<false> *res, HttpRequest *req) {
-            json j;
-            UpStatus status;
-            nlohmann::to_json(j, status);
             res->writeStatus(Constants::HTTP_OK);
-            res->end(j.dump());
+            static UpStatus status;
+            res->end(StringUtils::objToJsonString(status));
           });
 
           /// @fn /
@@ -59,6 +55,14 @@ int main(int argc, char **argv) {
               if(!split_ips.empty()) {
                 forwardedIp = split_ips.at(0);
               }
+            }
+            const auto format = req->getQuery(Constants::FORMAT);
+            if(format == Constants::JSON_FORMAT) {
+              const IPFormat ip(forwardedIp);
+              forwardedIp = StringUtils::objToJsonString(ip);
+              res->writeHeader(Constants::CONTENT_TYPE, Constants::CONTENT_TYPE_JSON);
+            } else {
+              res->writeHeader(Constants::CONTENT_TYPE, Constants::CONTENT_TYPE_TEXT);
             }
 
             res->writeStatus(Constants::HTTP_OK);
