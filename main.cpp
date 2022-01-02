@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
   using namespace argh;
 //  EASY_PROFILER_ENABLE;
 //  profiler::startListen();
+//  profiler::dumpBlocksToFile("test_profile.prof");
   parser cmdl(argv);
   glog.info("Starting the application");
   u_int64_t port = 8080;
