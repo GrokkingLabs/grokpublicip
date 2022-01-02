@@ -44,7 +44,7 @@ inline static spdlog::logger &col() {
       spdlog::stderr_color_mt<spdlog::async_factory>("stderr");
   return *spdlog::get("console");
 }
-#define glog grok::l()
+#define glog grok::col()
 #define GROK_DBG 1
 //#define DEBUG_LOG(...) BOOST_PP_EXPR_IIF(GROK_DBG, grok::col().info(__VA_ARGS__))
 //#define INFO_LOG(...) BOOST_PP_EXPR_IIF(GROK_DBG, grok::col().info(__VA_ARGS__))

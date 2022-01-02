@@ -47,6 +47,7 @@ struct Constants {
   static inline const string DOWN = "DOWN";
   // Others
   static inline const string NA = "NA";
+  static inline int const DEFAULT_NUMBER_OF_THREADS = 2;
 };
 } // namespace grok
 #endif // CONSTANTS_HPP
