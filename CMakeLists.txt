@@ -62,11 +62,6 @@ file(GLOB
   "src/third_party/argh/argh.h"
   )
 
-# Typically you don't care so much for a third party library's tests to be
-# run from your own project's code.
-set(JSON_BuildTests OFF CACHE INTERNAL "")
-set(JSON_Install OFF CACHE INTERNAL "")
-add_subdirectory(src/third_party/json/)
 #file(GLOB
 #  JSON_FOR_CPP
 #  "src/third_party/json/single_include/nlohmann/json.hpp"
@@ -113,8 +108,18 @@ file(
   "src/main/cpp/*.c"
   )
 
+# Typically you don't care so much for a third party library's tests to be
+# run from your own project's code.
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(JSON_Install OFF CACHE INTERNAL "")
+add_subdirectory(src/third_party/json/)
 add_subdirectory(src/third_party/fmt)
 add_subdirectory(src/third_party/spdlog)
+#set(EASY_PROFILER_NO_GUI OFF CACHE INTERNAL "")
+#set(EASY_PROFILER_NO_SAMPLES OFF CACHE INTERNAL "")
+#set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
+#add_subdirectory(src/third_party/easy_profiler)
+#find_package(easy_profiler REQUIRED)
 #add_subdirectory(src/third_party/abseil-cpp)
 #add_subdirectory(src/third_party/libuv)
 find_package(Threads REQUIRED)
@@ -127,7 +132,7 @@ find_package (Boost REQUIRED COMPONENTS
         )
 #add_subdirectory(src/third_party/uWebSockets)
 
-add_executable(rabri
+add_executable(${PROJECT_NAME}
   ${USOCKETS}
   ${UWEBSOCKETS}
   ${JSON_FOR_CPP}
@@ -159,6 +164,8 @@ target_link_libraries(${PROJECT_NAME}
         spdlog::spdlog
         fmt::fmt
         nlohmann_json::nlohmann_json
+#        easy_profiler
+
 #        absl::algorithm
 #        absl::base
 #        absl::debugging

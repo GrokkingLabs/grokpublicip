@@ -4,6 +4,7 @@
 #include "utils/Constants.hpp"
 #include "utils/Logger.hpp"
 #include "utils/StringUtils.hpp"
+//#include <easy/profiler.h>
 #include <App.h>
 #include <argh.h>
 #include <fmt/core.h>
@@ -16,6 +17,8 @@ int main(int argc, char **argv) {
   using namespace grok;
   using namespace uWS;
   using namespace argh;
+//  EASY_PROFILER_ENABLE;
+//  profiler::startListen();
   parser cmdl(argv);
   glog.info("Starting the application");
   u_int64_t port = 8080;
