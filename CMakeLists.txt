@@ -124,12 +124,12 @@ add_subdirectory(src/third_party/spdlog)
 #add_subdirectory(src/third_party/libuv)
 find_package(Threads REQUIRED)
 #find_package(libuv REQUIRED)
-find_package (Boost REQUIRED COMPONENTS
-        filesystem
-        program_options
-        system
-        thread
-        )
+#find_package (Boost REQUIRED COMPONENTS
+#        filesystem
+#        program_options
+#        system
+#        thread
+#        )
 #add_subdirectory(src/third_party/uWebSockets)
 
 add_executable(${PROJECT_NAME}
@@ -155,12 +155,12 @@ find_library(USOCKET_LIB uSockets.a /usr/local/lib/)
 message("USOCKET_LIB=${USOCKET_LIB}")
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-        Boost::boost
-        Boost::filesystem
-        Boost::thread
-        Boost::system
-        Boost::program_options
-        Boost::disable_autolinking
+#        Boost::boost
+#        Boost::filesystem
+#        Boost::thread
+#        Boost::system
+#        Boost::program_options
+#        Boost::disable_autolinking
         spdlog::spdlog
         fmt::fmt
         nlohmann_json::nlohmann_json

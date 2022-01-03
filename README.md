@@ -6,7 +6,7 @@ This is a service to get the public IP of the service that is calling it.
 - CMake
 - C++17 supported compiler
 - make
-- uSockets library
+- uSockets library (Clone the library and then execute make)
 ## How to Build
 - git clone https://github.com/GrokkingLabs/rabri.git rabri # Clone the repository 
 - cd rabri # Go to the directory
