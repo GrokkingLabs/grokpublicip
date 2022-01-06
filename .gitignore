@@ -1034,3 +1034,4 @@ luac.out
 # Executables
 .idea/
 .vscode/
+venv/*
