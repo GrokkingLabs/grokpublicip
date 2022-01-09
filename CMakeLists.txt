@@ -187,4 +187,4 @@ target_link_libraries(${PROJECT_NAME}
         ${USOCKET_LIB}
 #        NuDB::beast_extras
         )
-#add_compile_options(-O3 -v)
+add_compile_options(-O3 -v)
