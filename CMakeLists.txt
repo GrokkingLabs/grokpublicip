@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED OFF)
 set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_FLAGS_DISTRIBUTION "-E")
 set(CMAKE_C_FLAGS_DISTRIBUTION "-E")
 
@@ -151,7 +151,11 @@ link_directories(/usr/local/lib/)
 #target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 #target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 find_library(USOCKET_LIB uSockets.a /usr/local/lib/)
-
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+#    LINK_DIRECTORIES(/usr/lib/x86_64-linux-gnu/)
+#    TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} dl)
+    target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
+endif()
 message("USOCKET_LIB=${USOCKET_LIB}")
 target_link_libraries(${PROJECT_NAME}
   PRIVATE

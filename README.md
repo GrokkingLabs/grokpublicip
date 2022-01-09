@@ -14,4 +14,5 @@ This is a service to get the public IP of the service that is calling it.
 - mkdir build # Create a build directory to store the build files
 - cmake -H. -Bbuild -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release # Generate make files Unix systems
 - make -C build # Build the project
-- ./build/rabri --port=8081 # Start the server in the port mentioned
+- ./build/rabri --port=8081 --threaded=1 # Start the server in the port mentioned
+-- nohup /build/rabri --port=8081 --threaded=1 To start without shell 
