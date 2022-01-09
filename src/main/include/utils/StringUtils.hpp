@@ -6,8 +6,8 @@
 /// @author GrokkingLabs
 /// @brief Various string utilities.
 ///////////////////////////////////////////////////////////////////////////////
-#include <nlohmann/json.hpp>
 #include <fmt/format.h>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -42,8 +42,8 @@ public:
   /// @details This code is borrowed from the following
   /// @link https://www.cppstories.com/2018/07/string-view-perf-followup/
   /////////////////////////////////////////////////
-  inline static vector<std::string_view>
-  splitStringView(std::string_view strv, char delims = ' ') {
+  inline static vector<std::string_view> splitStringView(std::string_view strv,
+                                                         char delims = ' ') {
     vector<std::string_view> output;
     size_t first = 0;
 
@@ -69,8 +69,7 @@ public:
   /// @details For this to work the NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE or
   /// its variants should be defined
   /////////////////////////////////////////////////
-  template<typename T>
-  inline static string objToJsonString(T const& obj) {
+  template <typename T> inline static string objToJsonString(T const &obj) {
     json j;
     nlohmann::to_json(j, obj);
     return j.dump();

@@ -29,6 +29,7 @@ struct Constants {
   static inline const string CONTENT_TYPE_TEXT = "text/plain";
   // HTTP Header Values
   static inline const string X_FORWARDED_FOR = "x-forwarded-for";
+  static inline const string ORIGIN = "origin";
   static inline const char X_FORWARDED_FOR_IP_SEPARATOR = ',';
   // Query Parameters
   static inline const string FORMAT = "format";

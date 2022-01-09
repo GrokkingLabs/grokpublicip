@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
           app.get("/", [&](HttpResponse<false> *res, HttpRequest *req) {
             // Fetch the X_Forwarded_For header
             const auto xForwardFor = req->getHeader(Constants::X_FORWARDED_FOR);
-            string forwardedIp = Constants::NA;
+            std::string_view forwardedIp = Constants::NA;
             if (!xForwardFor.empty()) {
               // The first IP is the original IP. So split the header string
               const auto split_ips = StringUtils::splitStringView(
@@ -76,7 +76,13 @@ int main(int argc, char **argv) {
                 glog.warn("X_FORWARDED_FOR={} is not proper", xForwardFor);
               }
             } else {
-              glog.warn("Could not find X_FORWARDED_FOR header");
+              // Else try the origin header in case the agent adds it
+              const auto origin = req->getHeader(Constants::ORIGIN);
+              if(!origin.empty()) {
+                forwardedIp = origin;
+              } else {
+                glog.warn("Could not find X_FORWARDED_FOR or ORIGIN header");
+              }
             }
             // If format is mentioned as json then create the json object
             const auto format = req->getQuery(Constants::FORMAT);

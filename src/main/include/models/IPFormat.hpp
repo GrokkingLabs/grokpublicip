@@ -6,9 +6,9 @@
 namespace grok {
 using namespace std;
 struct IPFormat {
-  string ip;
+  string_view ip;
   IPFormat() = default;
-  IPFormat(string const& ip) {
+  IPFormat(string_view const& ip) {
     this->ip = ip;
   }
 };
