@@ -34,4 +34,93 @@ This is a service to get the public IP of the service that is calling it.
 
 ## / endpoint
 This endpoint will give you the public ip
-```curl --location --request GET 'http://<server-address>:8080/'```
+### Shell
+#### Curl
+```
+curl --location --request GET 'http://<server-address>:<port>/'
+```
+
+#### Httpie
+```
+http --follow --timeout 3600 GET 'http://<server-address>:<port>/'
+```
+
+#### wget
+```
+wget --no-check-certificate --quiet \
+  --method GET \
+  --timeout=0 \
+  --header '' \
+   'http://<server-address>:<port>/'
+```
+
+### Python
+#### requests
+```
+import requests
+
+url = "http://<server-address>:<port>/"
+
+payload={}
+headers = {}
+
+response = requests.request("GET", url, headers=headers, data=payload)
+
+print(response.text)
+```
+
+### Javascript
+#### Fetch
+```
+var requestOptions = {
+  method: 'GET',
+  redirect: 'follow'
+};
+
+fetch("http://<server-address>:<port>/", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+  ```
+  
+#### JQuery
+```
+var settings = {
+  "url": "http://<server-address>:<port>/",
+  "method": "GET",
+  "timeout": 0,
+};
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+```
+
+#### XHR
+```
+
+var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+
+xhr.addEventListener("readystatechange", function() {
+  if(this.readyState === 4) {
+    console.log(this.responseText);
+  }
+});
+
+xhr.open("GET", "http://<server-address>:<port>/");
+
+xhr.send();
+```
+
+### Java
+#### OkHttp
+```
+OkHttpClient client = new OkHttpClient().newBuilder()
+  .build();
+Request request = new Request.Builder()
+  .url("http://<server-address>:<port>/")
+  .method("GET", null)
+  .build();
+Response response = client.newCall(request).execute();
+```
