@@ -20,7 +20,6 @@ This is a service to get the public IP of the service that is calling it.
 - make -C build # Build the project
 
 ### Building docker image
-- cd build
 - docker build -t rabri . # You have to be in the build directory
 
 ## Executing
@@ -29,20 +28,21 @@ This is a service to get the public IP of the service that is calling it.
 - ./build/rabri --port=8081 --threaded=1 # Start the server in the port mentioned
 - nohup ./build/rabri --port=8081 --threaded=1 & # To start without shell associated
 - docker run --name rabri -p 8080:8080 -d rabri
+- cf push rabri -c './rabri' -b binary_buildpack -i 3 -k 256M -m 40M # Cloud Foundry
 
-# Using the library
+# Using the Endpoints
 
 ## / endpoint
 This endpoint will give you the public ip
 ### Shell
 #### Curl
 ```
-curl --location --request GET 'http://<server-address>:<port>/'
+curl --location --request GET 'http://grokkinglabs.xyz/'
 ```
 
 #### Httpie
 ```
-http --follow --timeout 3600 GET 'http://<server-address>:<port>/'
+http --follow --timeout 3600 GET 'http://grokkinglabs.xyz/'
 ```
 
 #### wget
@@ -51,7 +51,7 @@ wget --no-check-certificate --quiet \
   --method GET \
   --timeout=0 \
   --header '' \
-   'http://<server-address>:<port>/'
+   'http://grokkinglabs.xyz/'
 ```
 
 ### Python
@@ -59,7 +59,7 @@ wget --no-check-certificate --quiet \
 ```
 import requests
 
-url = "http://<server-address>:<port>/"
+url = "http://grokkinglabs.xyz/"
 
 payload={}
 headers = {}
@@ -77,7 +77,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://<server-address>:<port>/", requestOptions)
+fetch("http://grokkinglabs.xyz/", requestOptions)
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
@@ -86,7 +86,7 @@ fetch("http://<server-address>:<port>/", requestOptions)
 #### JQuery
 ```
 var settings = {
-  "url": "http://<server-address>:<port>/",
+  "url": "http://grokkinglabs.xyz/",
   "method": "GET",
   "timeout": 0,
 };
@@ -108,7 +108,7 @@ xhr.addEventListener("readystatechange", function() {
   }
 });
 
-xhr.open("GET", "http://<server-address>:<port>/");
+xhr.open("GET", "http://grokkinglabs.xyz/");
 
 xhr.send();
 ```
@@ -119,7 +119,7 @@ xhr.send();
 OkHttpClient client = new OkHttpClient().newBuilder()
   .build();
 Request request = new Request.Builder()
-  .url("http://<server-address>:<port>/")
+  .url("http://grokkinglabs.xyz/")
   .method("GET", null)
   .build();
 Response response = client.newCall(request).execute();
