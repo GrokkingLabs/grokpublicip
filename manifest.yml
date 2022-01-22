@@ -1,0 +1,14 @@
+version: 1
+applications:
+  - name: rabri
+    path: ./rabri
+    buildpack: binary-buildpack
+    memory: 300M
+    instances: 3
+    disk: 300
+    health-check-type: http
+    health-check-http-endpoint: /health
+    health-check-invocation-timeout: 30
+env:
+  appid: 1234
+  hostip: ${hostip}
